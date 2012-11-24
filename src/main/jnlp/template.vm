@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+    spec="$jnlpspec"
+    href="$outputFile">
+  <information>
+    <title>$project.Name</title>
+    <vendor>com.github.jmchilton</vendor>
+    <homepage href="$project.Url"/>
+    <description>$project.Description</description>
+    <offline-allowed/>
+  </information>
+  <security>
+     <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="$j2seVersion"/>
+     $dependencies
+  </resources>
+  <application-desc main-class="$mainClass"/>
+</jnlp>
