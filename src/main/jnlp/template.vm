@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
     spec="$jnlpspec"
-    codebase="http://artifactory.msi.umn.edu:8010/webstart/jgalaxy"
+    codebase="http://artifactory.msi.umn.edu:8080/webstart/jgalaxy"
     href="$outputFile">
   <information>
     <title>$project.Name</title>
