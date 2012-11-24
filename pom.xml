@@ -8,11 +8,78 @@
   <packaging>jar</packaging>
 
   <name>JGalaxy</name>
-  <url>http://maven.apache.org</url>
+  <description>
+    A Java/swing frontend for Galaxy (galaxyproject.org).
+  </description>
+  <url>https://github.com/jmchilton/jgalaxy</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo.webstart</groupId>
+        <artifactId>webstart-maven-plugin</artifactId>
+        <version>1.0-beta-2</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>jnlp-inline</goal> <!-- use jnlp, jnlp-inline or jnlp-single as appropriate -->
+            </goals>
+          </execution>
+        </executions>
+        <configuration>          
+          <jnlp>
+            <outputFile>jgalaxy.jnlp</outputFile> <!-- defaults to launch.jnlp -->
+            <mainClass>com.github.jmchilton.jgalaxy.JGalaxy</mainClass>
+          </jnlp>
+          <makeArchive>false</makeArchive>        
+          <pack200>true</pack200>
+          <gzip>true</gzip>
+          <outputJarVersions>true</outputJarVersions>
+          <!-- 
+          Create keystore with key for jgalaxy:
+          
+          % keytool -genkey -alias jgalaxy -keystore $HOME/jgalaxy.jks
+          
+          Edit ~/.m2/settings.xml.
+          
+          Add profile uses-jgalaxy.key
+          
+            <profiles>
+              <profile>
+                <id>uses-jgalaxy-key</id>
+                <properties>
+                  <jgalaxy.key.keystore>${user.home}/jgalaxy.jks</jgalaxy.key.keystore>
+                  <jgalaxy.key.keypassword>XXX</jgalaxy.key.keypassword>
+                  <jgalaxy.key.storepassword>XXX</jgalaxy.key.storepassword>
+                  <jgalaxy.key.alias>jgalaxy</jgalaxy.key.alias>
+                </properties>
+              </profile>
+            </profiles>
+            
+          Enable it with -Pusers-jgalaxy-key or add to activeProfiles.
+          
+            <activeProfiles>
+              <activeProfile>uses-jgalaxy-key</activeProfile>
+            </activeProfiles>
+          -->
+          <sign>
+            <keystore>${jgalaxy.key.keystore}</keystore>
+            <keypass>${jgalaxy.key.keypassword}</keypass>
+            <storepass>${jgalaxy.key.storepassword}</storepass>
+            <storetype>jks</storetype>
+            <alias>${jgalaxy.key.alias}</alias>
+            <verify>true</verify>
+          </sign>
+          <verbose>true</verbose>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <repositories>
     <repository>
@@ -39,5 +106,11 @@
       <version>6.6</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.mojo.webstart</groupId>
+      <artifactId>webstart-jnlp-servlet</artifactId>
+      <version>1.0-6.0-02_ea_b02</version>
+      <scope>runtime</scope>
+    </dependency>    
   </dependencies>
 </project>
