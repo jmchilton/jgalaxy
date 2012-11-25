@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
     spec="$jnlpspec"
-    codebase="http://artifactory.msi.umn.edu:8080/webstart/jgalaxy"
-    href="$outputFile">
+    codebase="$$codebase">
   <information>
     <title>$project.Name</title>
     <vendor>com.github.jmchilton</vendor>
@@ -17,5 +16,9 @@
     <j2se version="$j2seVersion"/>
     $dependencies
   </resources>
-  <application-desc main-class="$mainClass"/>
+  <application-desc />
+  <!--
+  <application-desc main-class="$mainClass">
+  </application-desc>
+  -->
 </jnlp>

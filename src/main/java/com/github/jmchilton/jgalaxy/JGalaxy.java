@@ -427,6 +427,10 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
     }
     //</editor-fold>
 
+    for(final String arg : args) {
+      System.out.println("HAVE ARG " + arg);
+    }
+    
     /* Create and display the form */
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
