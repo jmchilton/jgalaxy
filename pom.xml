@@ -36,7 +36,7 @@
             <outputFile>jgalaxy.jnlp</outputFile> <!-- defaults to launch.jnlp -->
             <mainClass>com.github.jmchilton.jgalaxy.JGalaxy</mainClass>
           </jnlp>
-          <makeArchive>false</makeArchive>        
+          <makeArchive>true</makeArchive>        
           <pack200>true</pack200>
           <gzip>true</gzip>
           <outputJarVersions>true</outputJarVersions>
