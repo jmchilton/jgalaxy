@@ -42,3 +42,9 @@ required to get this working.
 [b2]: http://docs.oracle.com/javase/tutorial/deployment/webstart/deploying.html
 [b3]: http://docs.oracle.com/javase/7/docs/technotes/guides/javaws/developersguide/downloadservletguide.html
 [b4]: https://github.com/jmchilton/jgalaxy/tree/jnlpdownloadservlet
+
+# License
+
+The code is freely available under the [Apache License Version 2.0][l1].
+
+[l1]: http://www.apache.org/licenses/LICENSE-2.0.html
