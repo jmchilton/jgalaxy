@@ -16,7 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JDialog;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListener {
@@ -224,7 +226,7 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
     });
     historiesPane.setViewportView(historiesList);
 
-    historyContentsLabel.setText("Contents");
+    historyContentsLabel.setText("Datasets");
 
     historyContentsList.setCellRenderer(HISTORY_CONTENTS_RENDERER);
     historyContentsPane.setViewportView(historyContentsList);
@@ -278,7 +280,7 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(historiesPane, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+          .addComponent(historiesPane)
           .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -332,7 +334,7 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
         }
       });
       connectionMenu.add(item);
-    }    
+    }
   }
 
   private void initHistoryContentsActions() {
@@ -525,6 +527,10 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
   }
   
   private void bulkDownload() {
+    if(getSelectedHistoryContentsList().isEmpty()) {
+      JOptionPane.showMessageDialog(this, "Must select one or more datasets to download.", "Warning", JOptionPane.WARNING_MESSAGE);
+      return;
+    }
     final DefaultTableModel model = getBulkDownloadModel();
     model.setNumRows(0);
     for(final HistoryContents historyContents : getSelectedHistoryContentsList()) {
