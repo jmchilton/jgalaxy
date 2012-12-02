@@ -39,7 +39,7 @@
           <makeArchive>true</makeArchive>        
           <pack200>true</pack200>
           <gzip>true</gzip>
-          <outputJarVersions>true</outputJarVersions>
+          <outputJarVersions>false</outputJarVersions>
           <!-- 
           Create keystore with key for jgalaxy:
           
