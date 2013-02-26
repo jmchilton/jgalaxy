@@ -69,17 +69,21 @@ public class InstanceManager {
       }
     }
   }
-      
-  public void connectNewInstance(final String url, final String apiKey) {
-    currentInstance = GalaxyInstanceFactory.get(url, apiKey);
-    final Instance instance = new Instance();
-    instance.setUrl(url);
-    instance.setApiKey(apiKey);
+  
+  public void connectNewInstance(final Instance instance) {
+    currentInstance = GalaxyInstanceFactory.get(instance.getUrl(), instance.getApiKey());
     if(!instances.contains(instance)) {
       instances.add(instance);
       saveInstances();
     }
-    instanceUpdateListener.update();
+    instanceUpdateListener.update();    
+  }
+  
+  public void connectNewInstance(final String url, final String apiKey) {
+    final Instance instance = new Instance();
+    instance.setUrl(url);
+    instance.setApiKey(apiKey);
+    this.connectNewInstance(instance);
   }
   
   public GalaxyInstance getCurrentInstance() {

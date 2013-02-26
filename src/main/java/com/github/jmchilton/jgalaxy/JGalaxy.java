@@ -6,6 +6,7 @@ import com.github.jmchilton.blend4j.galaxy.beans.History;
 import com.github.jmchilton.blend4j.galaxy.beans.HistoryContents;
 import com.github.jmchilton.jgalaxy.InstanceManager.InstanceUpdateListener;
 import com.github.jmchilton.jgalaxy.DownloadTasks.DownloadUpdater;
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.awt.event.ActionEvent;
@@ -30,9 +31,12 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
   private History currentHistory;
   private Map<String, Runnable> historyContentsActionMap = new HashMap<String, Runnable>();
 
-  public JGalaxy() {
+  public JGalaxy(final Optional<Instance> instance) {
     initComponents();
     instanceManager = new InstanceManager(this);
+    if(instance.isPresent()) {
+      instanceManager.connectNewInstance(instance.get());
+    }
     initData();
   }
 
@@ -429,10 +433,19 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
     }
     //</editor-fold>
 
+    final Optional<Instance> instance;
+    if(args.length >= 2) {
+      instance = Optional.of(new Instance());
+      instance.get().setUrl(args[args.length - 2]);
+      instance.get().setApiKey(args[args.length - 1]);
+    } else {
+      instance = Optional.absent();
+    }
+
     /* Create and display the form */
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-        new JGalaxy().setVisible(true);
+        new JGalaxy(instance).setVisible(true);
       }
     });
   }
