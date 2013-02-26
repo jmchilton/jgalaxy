@@ -442,6 +442,13 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
       instance = Optional.absent();
     }
 
+    for(final String arg : args) {
+      if(arg.equals("--no-check-certificate")) {
+        System.out.println("Disabling certificate");
+        Ssl.disableCertificateCheck();
+      }
+    }
+
     /* Create and display the form */
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
