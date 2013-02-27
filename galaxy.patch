@@ -1,0 +1,93 @@
+# HG changeset patch
+# User John Chilton <jmchilton@gmail.com>
+# Date 1361892969 21600
+# Branch msi
+# Node ID 83dbfbad50032ce3b3c767f4eb410fc1e83b3fe4
+# Parent  a4be7b2bf13db3819b38217766332e5e2b30eb3f
+Add JGalaxy connector.
+
+diff -r a4be7b2bf13d -r 83dbfbad5003 lib/galaxy/webapps/galaxy/buildapp.py
+--- a/lib/galaxy/webapps/galaxy/buildapp.py	Mon Feb 25 13:30:11 2013 -0600
++++ b/lib/galaxy/webapps/galaxy/buildapp.py	Tue Feb 26 09:36:09 2013 -0600
+@@ -60,6 +61,9 @@
+     webapp.add_route( '/u/:username/w/:slug', controller='workflow', action='display_by_username_and_slug' )
+     webapp.add_route( '/u/:username/v/:slug', controller='visualization', action='display_by_username_and_slug' )
+     
++    webapp.add_route( '/jgalaxy/file/:filename', controller='jgalaxy', action='get', filename=None )
++
++
+     # Add the web API
+     webapp.add_api_controllers( 'galaxy.webapps.galaxy.api', app )
+     # The /folders section is experimental at this point:
+diff -r a4be7b2bf13d -r 83dbfbad5003 lib/galaxy/webapps/galaxy/controllers/jgalaxy.py
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/lib/galaxy/webapps/galaxy/controllers/jgalaxy.py	Tue Feb 26 09:36:09 2013 -0600
+@@ -0,0 +1,57 @@
++import logging
++
++from galaxy.web.base.controller import BaseUIController, web
++
++from urllib2 import urlopen
++from xml.etree.ElementTree import fromstring, SubElement, tostring
++
++log = logging.getLogger( __name__ )
++
++JNLP_URL = "http://artifactory.msi.umn.edu:8080/webstart/jgalaxy/jgalaxy.jnlp"
++DISABLE_CERTIFICATE_CHECK=False
++
++class JGalaxyController( BaseUIController ):
++    
++    @web.expose
++    def get( self, trans, filename, **kwd ):
++        if filename.endswith( '.jnlp' ):
++            return self.__render_jnlp( trans, filename, **kwd )
++        else:
++            raise Exception("Filename: %s, not supported." % filename)
++
++    def __render_jnlp( self, trans, filename, **kwd ):
++        response = urlopen(JNLP_URL)
++        root = fromstring(response.read())
++        try:
++            del root.attrib["href"]
++        except:
++            pass
++        application_desc = root.find('application-desc')
++        
++        if DISABLE_CERTIFICATE_CHECK:
++            self.__add_argument( application_desc, "--no-check-certificate" )
++
++        base_url = trans.request.base
++        self.__add_argument( application_desc, base_url )
++
++        api_keys = trans.user.api_keys
++        if len(api_keys) == 0:
++            new_key = trans.app.model.APIKeys()
++            new_key.user_id = trans.user.id
++            new_key.key = trans.app.security.get_new_guid()
++            trans.sa_session.add( new_key )
++            trans.sa_session.flush()
++            api_key = new_key
++        else:
++            api_key = api_keys[0]
++        self.__add_argument( application_desc, api_key.key )
++        trans.response.set_content_type('trans.application/x-java-jnlp-file')
++        return tostring(root)
++
++    def __add_argument( self, application_desc, value ):
++        argument = SubElement(application_desc, tag="argument")
++        argument.text = value
++
++
++    def __get_file( self, trans, filename, **kwd ):
++        pass
+diff -r a4be7b2bf13d -r 83dbfbad5003 templates/webapps/galaxy/base_panels.mako
+--- a/templates/webapps/galaxy/base_panels.mako	Mon Feb 25 13:30:11 2013 -0600
++++ b/templates/webapps/galaxy/base_panels.mako	Tue Feb 26 09:36:09 2013 -0600
+@@ -168,6 +168,7 @@
+         menu_options.append( [ _('Saved Histories'), h.url_for( controller='/history', action='list' ), "galaxy_main" ] )
+         menu_options.append( [ _('Saved Datasets'), h.url_for( controller='/dataset', action='list' ), "galaxy_main" ] )
+         menu_options.append( [ _('Saved Pages'), h.url_for( controller='/page', action='list' ), "_top" ] )
++        menu_options.append( [ _('JGalaxy'), h.url_for( controller='/jgalaxy', action='get', filename='jgalaxy.jnlp') ] )
+         menu_options.append( [ _('API Keys'), h.url_for( controller='/user', action='api_keys', cntrller='user' ), "galaxy_main" ] )
+         if app.config.use_remote_user:
+             menu_options.append( [ _('Public Name'), h.url_for( controller='/user', action='edit_username', cntrller='user' ), "galaxy_main" ] )
