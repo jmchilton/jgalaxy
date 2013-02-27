@@ -4,17 +4,20 @@ import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
 import com.github.jmchilton.blend4j.galaxy.HistoriesClient;
 import com.github.jmchilton.blend4j.galaxy.beans.History;
 import com.github.jmchilton.blend4j.galaxy.beans.HistoryContents;
+import com.github.jmchilton.blend4j.galaxy.beans.HistoryDetails;
 import com.github.jmchilton.jgalaxy.InstanceManager.InstanceUpdateListener;
 import com.github.jmchilton.jgalaxy.DownloadTasks.DownloadUpdater;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
@@ -516,8 +519,13 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
   private void loadContents() {
     historyContentsList.removeAll();
     final Vector<HistoryContents> historyContentsVector = new Vector<HistoryContents>();
-    for(final HistoryContents historyContents : getHistoriesClient().showHistoryContents(this.currentHistory.getId())) {
-      historyContentsVector.add(historyContents);
+    final String historyId = this.currentHistory.getId();
+    final HistoryDetails details = getHistoriesClient().showHistory(historyId);
+    final Set<String> okIds = Sets.newHashSet(details.getStateIds().get("ok"));
+    for(final HistoryContents historyContents : getHistoriesClient().showHistoryContents(historyId)) {
+      if(okIds.contains(historyContents.getId())) {
+        historyContentsVector.add(historyContents);
+      }
     }
     historyContentsList.setListData(historyContentsVector);
   }
