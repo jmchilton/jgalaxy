@@ -12,6 +12,9 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -36,9 +39,11 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
   private History currentHistory;
   private Map<String, Runnable> historyContentsActionMap = new HashMap<String, Runnable>();
 
-  public JGalaxy(final Optional<Instance> instance) {
+  @Inject
+  public JGalaxy(final InputState inputState) {
     initComponents();
     instanceManager = new InstanceManager(this);
+    final Optional<Instance> instance = inputState.getInstance();
     if(instance.isPresent()) {
       instanceManager.connectNewInstance(instance.get());
     }
@@ -341,10 +346,11 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
           .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
             .addComponent(fileType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(fileTypeLabel))
-          .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-            .addComponent(uploadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel3)
-            .addComponent(dbKeyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(uploadButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(jLabel3)
+              .addComponent(dbKeyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
           .addComponent(jSeparator5))
         .addContainerGap())
     );
@@ -488,11 +494,13 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
         bulkDownload();
       }
     });
+
     historyContentsActionMap.put("Bulk Upload", new Runnable() {
       public void run() {
         bulkUpload();
       }
     });
+
     for(final String actionLabel : historyContentsActionMap.keySet()) {
       historyContentsActions.addItem(actionLabel);      
     }
@@ -586,9 +594,19 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
     uploadPane.grabFocus();
   }//GEN-LAST:event_uploadButtonActionPerformed
 
-  /**
-   * @param args the command line arguments
-   */
+  public static class InputState {
+    private final Optional<Instance> instance;
+
+    InputState(final Optional<Instance> instance) {
+      this.instance = instance;
+    }
+    
+    public Optional<Instance> getInstance() {
+      return instance;
+    }
+    
+  }
+  
   public static void main(String args[]) {
     /* Set the Nimbus look and feel */
     //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -624,15 +642,19 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
 
     for(final String arg : args) {
       if(arg.equals("--no-check-certificate")) {
-        System.out.println("Disabling certificate");
+        System.out.println("Disabling SSL certificate checks.");
         Ssl.disableCertificateCheck();
       }
     }
+    
+    final InputState inputState = new InputState(instance);
 
     /* Create and display the form */
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-        new JGalaxy(instance).setVisible(true);
+        final Injector injector = Guice.createInjector(new JGalaxyModule(inputState));
+        JGalaxy jGalaxy = injector.getInstance(JGalaxy.class);
+        jGalaxy.setVisible(true);
       }
     });
   }
