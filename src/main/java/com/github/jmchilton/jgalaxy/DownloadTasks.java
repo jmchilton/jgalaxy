@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.github.jmchilton.jgalaxy;
 
 import com.github.jmchilton.blend4j.galaxy.HistoriesClient;
@@ -16,24 +12,15 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.Map;
 
-/**
- *
- * @author john
- */
 class DownloadTasks extends javax.swing.SwingWorker {
   private static final int BUFFER_SIZE = 4096;
   private File destinationDirectory;
   private Map<HistoryContents, String> downloads;
   private History history;
   private HistoriesClient historiesClient;
-  private DownloadUpdater updater;
+  private IndexedProgressUpdater updater;
 
-  interface DownloadUpdater {
-
-    void setProgress(int index, int percentComplete);
-  }
-
-  DownloadTasks(final File destinationDirectory, final Map<HistoryContents, String> downloads, final History history, final HistoriesClient historiesClient, final DownloadUpdater updater) {
+  DownloadTasks(final File destinationDirectory, final Map<HistoryContents, String> downloads, final History history, final HistoriesClient historiesClient, final IndexedProgressUpdater updater) {
     this.destinationDirectory = destinationDirectory;
     this.downloads = downloads;
     this.history = history;

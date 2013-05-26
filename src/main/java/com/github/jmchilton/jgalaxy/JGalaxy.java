@@ -2,11 +2,12 @@ package com.github.jmchilton.jgalaxy;
 
 import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
 import com.github.jmchilton.blend4j.galaxy.HistoriesClient;
+import com.github.jmchilton.blend4j.galaxy.ToolsClient;
 import com.github.jmchilton.blend4j.galaxy.beans.History;
 import com.github.jmchilton.blend4j.galaxy.beans.HistoryContents;
 import com.github.jmchilton.blend4j.galaxy.beans.HistoryDetails;
 import com.github.jmchilton.jgalaxy.InstanceManager.InstanceUpdateListener;
-import com.github.jmchilton.jgalaxy.DownloadTasks.DownloadUpdater;
+import com.github.jmchilton.jgalaxy.IndexedProgressUpdater;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -15,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,6 +68,19 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
     jLabel2 = new javax.swing.JLabel();
     jSeparator2 = new javax.swing.JSeparator();
     downloadDestinationChooser = new javax.swing.JFileChooser();
+    uploadDialog = new javax.swing.JDialog();
+    uploadPane = new javax.swing.JScrollPane();
+    uploadTable = new javax.swing.JTable();
+    selectFilesButton = new javax.swing.JButton();
+    jSeparator3 = new javax.swing.JSeparator();
+    fileType = new javax.swing.JTextField();
+    fileTypeLabel = new javax.swing.JLabel();
+    jSeparator4 = new javax.swing.JSeparator();
+    uploadButton = new javax.swing.JButton();
+    jLabel3 = new javax.swing.JLabel();
+    dbKeyTextField = new javax.swing.JTextField();
+    jSeparator5 = new javax.swing.JSeparator();
+    uploadFileChooser = new javax.swing.JFileChooser();
     jSeparator1 = new javax.swing.JSeparator();
     jLabel1 = new javax.swing.JLabel();
     historiesPane = new javax.swing.JScrollPane();
@@ -172,6 +187,11 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
         downloadDestinationFieldMouseClicked(evt);
       }
     });
+    downloadDestinationField.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        downloadDestinationFieldActionPerformed(evt);
+      }
+    });
 
     jLabel2.setText("Destination");
 
@@ -215,6 +235,124 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
     downloadDestinationChooser.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
         downloadDestinationChooserActionPerformed(evt);
+      }
+    });
+
+    uploadTable.setModel(new javax.swing.table.DefaultTableModel(
+      new Object [][] {
+
+      },
+      new String [] {
+        "Dataset", "Filename", "Status"
+      }
+    ) {
+      Class[] types = new Class [] {
+        java.lang.String.class, java.lang.String.class, java.lang.Object.class
+      };
+      boolean[] canEdit = new boolean [] {
+        true, true, false
+      };
+
+      public Class getColumnClass(int columnIndex) {
+        return types [columnIndex];
+      }
+
+      public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return canEdit [columnIndex];
+      }
+    });
+    uploadPane.setViewportView(uploadTable);
+    uploadTable.getColumnModel().getColumn(2).setResizable(false);
+    uploadTable.getColumnModel().getColumn(2).setCellRenderer(new ProgressRenderer());
+
+    selectFilesButton.setText("Select Files");
+    selectFilesButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        selectFilesButtonActionPerformed(evt);
+      }
+    });
+
+    jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+    fileType.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+    fileType.setText("auto");
+    fileType.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        fileTypeActionPerformed(evt);
+      }
+    });
+
+    fileTypeLabel.setText("File Type");
+
+    jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+    uploadButton.setText("Upload");
+    uploadButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        uploadButtonActionPerformed(evt);
+      }
+    });
+
+    jLabel3.setText("Genome");
+
+    dbKeyTextField.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+    dbKeyTextField.setText("?");
+
+    jSeparator5.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+    javax.swing.GroupLayout uploadDialogLayout = new javax.swing.GroupLayout(uploadDialog.getContentPane());
+    uploadDialog.getContentPane().setLayout(uploadDialogLayout);
+    uploadDialogLayout.setHorizontalGroup(
+      uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(uploadDialogLayout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(uploadDialogLayout.createSequentialGroup()
+            .addComponent(selectFilesButton)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(fileTypeLabel)
+            .addGap(6, 6, 6)
+            .addComponent(fileType, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(18, 18, 18)
+            .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jLabel3)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(dbKeyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(uploadButton))
+          .addComponent(uploadPane, javax.swing.GroupLayout.DEFAULT_SIZE, 650, Short.MAX_VALUE))
+        .addContainerGap())
+    );
+    uploadDialogLayout.setVerticalGroup(
+      uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(uploadDialogLayout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(uploadPane, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+          .addComponent(jSeparator3)
+          .addComponent(selectFilesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jSeparator4)
+          .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addComponent(fileType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(fileTypeLabel))
+          .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addComponent(uploadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel3)
+            .addComponent(dbKeyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addComponent(jSeparator5))
+        .addContainerGap())
+    );
+
+    uploadFileChooser.setMultiSelectionEnabled(true);
+    uploadFileChooser.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        uploadFileChooserActionPerformed(evt);
       }
     });
 
@@ -350,6 +488,11 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
         bulkDownload();
       }
     });
+    historyContentsActionMap.put("Bulk Upload", new Runnable() {
+      public void run() {
+        bulkUpload();
+      }
+    });
     for(final String actionLabel : historyContentsActionMap.keySet()) {
       historyContentsActions.addItem(actionLabel);      
     }
@@ -391,13 +534,15 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
 
   private void bulkDownloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bulkDownloadButtonActionPerformed
     final File destinationDirectory = new File(downloadDestinationField.getText());    
-    new DownloadTasks(destinationDirectory, getBulkDownloads(), currentHistory, getHistoriesClient(),  new DownloadUpdater() {
+    new DownloadTasks(destinationDirectory, getBulkDownloads(), currentHistory, getHistoriesClient(),  new IndexedProgressUpdater() {
 
       public void setProgress(int index, int percentComplete) {
         bulkDownloadTable.setValueAt(percentComplete, index, 2);
       }
       
     }).execute();
+    
+    bulkDownloadPane.grabFocus();
   }//GEN-LAST:event_bulkDownloadButtonActionPerformed
 
   private void downloadDestinationChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadDestinationChooserActionPerformed
@@ -408,6 +553,38 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
   private void downloadDestinationFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_downloadDestinationFieldMouseClicked
     downloadDestinationChooser.showOpenDialog(this);
   }//GEN-LAST:event_downloadDestinationFieldMouseClicked
+
+  private void fileTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileTypeActionPerformed
+    // TODO add your handling code here:
+  }//GEN-LAST:event_fileTypeActionPerformed
+
+  private void selectFilesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFilesButtonActionPerformed
+    uploadFileChooser.showOpenDialog(this);
+  }//GEN-LAST:event_selectFilesButtonActionPerformed
+
+  private void downloadDestinationFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadDestinationFieldActionPerformed
+
+  }//GEN-LAST:event_downloadDestinationFieldActionPerformed
+
+  private void uploadFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadFileChooserActionPerformed
+    final File[] files = uploadFileChooser.getSelectedFiles();
+    final DefaultTableModel model = getUploadModel();
+    for(final File file : files) {
+      model.addRow(new Object[] { file.getName(), file.getPath(), -1 });
+    }
+  }//GEN-LAST:event_uploadFileChooserActionPerformed
+
+  private void uploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadButtonActionPerformed
+    final Map<String, String> uploads = getUploads();
+    new UploadTask(uploads, getToolsClient(), currentHistory.getId(), fileType.getText(), dbKeyTextField.getText(), new IndexedProgressUpdater() {
+
+      public void setProgress(int index, int percentComplete) {
+        uploadTable.setValueAt(percentComplete, index, 2);
+      }
+      
+    }).execute();
+    uploadPane.grabFocus();
+  }//GEN-LAST:event_uploadButtonActionPerformed
 
   /**
    * @param args the command line arguments
@@ -468,10 +645,13 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
   private javax.swing.JTable bulkDownloadTable;
   private javax.swing.JButton connectButton;
   private javax.swing.JMenu connectionMenu;
+  private javax.swing.JTextField dbKeyTextField;
   private javax.swing.JFileChooser downloadDestinationChooser;
   private javax.swing.JTextField downloadDestinationField;
   private javax.swing.JDialog downloadDialog;
   private javax.swing.JMenuItem exitMenuItem;
+  private javax.swing.JTextField fileType;
+  private javax.swing.JLabel fileTypeLabel;
   private javax.swing.JComboBox galaxyUrlField;
   private javax.swing.JLabel galaxyUrlLabel;
   private javax.swing.JMenu helpMenu;
@@ -483,12 +663,22 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
   private javax.swing.JScrollPane historyContentsPane;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
+  private javax.swing.JLabel jLabel3;
   private javax.swing.JMenu jMenu1;
   private javax.swing.JSeparator jSeparator1;
   private javax.swing.JSeparator jSeparator2;
+  private javax.swing.JSeparator jSeparator3;
+  private javax.swing.JSeparator jSeparator4;
+  private javax.swing.JSeparator jSeparator5;
   private javax.swing.JMenuBar menuBar;
   private javax.swing.JDialog newConnectionDialog;
   private javax.swing.JMenuItem newConnectionMenuItem;
+  private javax.swing.JButton selectFilesButton;
+  private javax.swing.JButton uploadButton;
+  private javax.swing.JDialog uploadDialog;
+  private javax.swing.JFileChooser uploadFileChooser;
+  private javax.swing.JScrollPane uploadPane;
+  private javax.swing.JTable uploadTable;
   // End of variables declaration//GEN-END:variables
 
   private Map<HistoryContents, String> getBulkDownloads() {
@@ -501,6 +691,18 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
         downloads.put(contents, filename);
       }
     return downloads;
+  }
+
+  private Map<String, String> getUploads() {
+    final Map<String, String> uploads = Maps.newLinkedHashMap();
+      final DefaultTableModel model = getUploadModel();
+      final int rowCount = model.getRowCount();
+      for(int i = 0; i < rowCount; i++) {
+        final String datasetName = (String) model.getValueAt(i, 0);
+        final String filename = (String) model.getValueAt(i, 1);
+        uploads.put(filename, datasetName);
+      }
+    return uploads;
   }
   
   public void update() {
@@ -542,6 +744,10 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
     return this.instanceManager.getCurrentInstance().getHistoriesClient();
   }
   
+  private ToolsClient getToolsClient() {
+    return this.instanceManager.getCurrentInstance().getToolsClient();
+  }
+  
   private void setHistory(final History history) {
     this.currentHistory = history;
     if(history != null) {
@@ -553,6 +759,26 @@ public class JGalaxy extends javax.swing.JFrame implements InstanceUpdateListene
     final DefaultTableModel model = (DefaultTableModel) bulkDownloadTable.getModel();    
     return model;
   }
+  
+  private DefaultTableModel getUploadModel() {
+    final DefaultTableModel model = (DefaultTableModel) uploadTable.getModel();
+    return model;
+  }
+  
+  private void bulkUpload() {
+    if(!getAndVerifyHistory().isPresent()) {
+      JOptionPane.showMessageDialog(this, "Must select history to upload to.", "Warning", JOptionPane.WARNING_MESSAGE);
+      return;
+    }
+    uploadDialog.pack();
+    uploadDialog.setVisible(true);
+  }
+  
+  private Optional<String> getAndVerifyHistory() {
+    final String historyId = this.currentHistory.getId();
+    return Optional.of(historyId);
+  }
+  
   
   private void bulkDownload() {
     if(getSelectedHistoryContentsList().isEmpty()) {
