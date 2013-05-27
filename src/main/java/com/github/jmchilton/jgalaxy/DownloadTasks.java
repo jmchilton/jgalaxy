@@ -49,8 +49,9 @@ class DownloadTasks extends javax.swing.SwingWorker {
         outputStream.write(buffer);
         copiedSize += bytesRead;
         final int percentInt = (int) ((copiedSize * 100) / totalFileSize);
-        updater.setProgress(i++, percentInt);
+        updater.setProgress(i, percentInt);
       }
+      updater.setProgress(i++, 100);
     }
   }
 

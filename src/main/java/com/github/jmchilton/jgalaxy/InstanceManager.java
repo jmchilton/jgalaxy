@@ -4,14 +4,18 @@ import com.github.jmchilton.blend4j.galaxy.GalaxyInstance;
 import com.github.jmchilton.blend4j.galaxy.GalaxyInstanceFactory;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
+@Singleton
 public class InstanceManager {
   public static final Map<String, String> GALAXY_INSTANCES = new HashMap<String, String>();
   static {
@@ -23,20 +27,20 @@ public class InstanceManager {
     GALAXY_INSTANCES.put("https://galaxyp.msi.umn.edu/", "MSI Galaxy-P");
   }
   private GalaxyInstance currentInstance;
-  private InstanceUpdateListener instanceUpdateListener;
+  private EventBus eventBus;
   private List<Instance> instances;
+  
+  public static class InstanceUpdateEvent {
+  }
   
   public Map<String, String> getStockGalaxyInstances() {
     return GALAXY_INSTANCES;
   }
   
-  public InstanceManager(InstanceUpdateListener instanceUpdateListener) {
-    this.instanceUpdateListener = instanceUpdateListener;
+  @Inject
+  public InstanceManager(EventBus eventBus) {
+    this.eventBus = eventBus;
     initInstances();
-  }
-  
-  public interface InstanceUpdateListener {
-    public void update();
   }
   
   public List<Instance> getInstances() {
@@ -76,7 +80,7 @@ public class InstanceManager {
       instances.add(instance);
       saveInstances();
     }
-    instanceUpdateListener.update();    
+    this.eventBus.post(new InstanceUpdateEvent());
   }
   
   public void connectNewInstance(final String url, final String apiKey) {
