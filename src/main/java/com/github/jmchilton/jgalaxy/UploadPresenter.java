@@ -20,10 +20,23 @@ public class UploadPresenter {
   public static class UploadEvent extends HistoryContentsActionManager.HistoryContentsActionEvent {
   }
 
-  @Subscribe
-  public void handleUploadEvent(final UploadEvent event) {
-    final UploadDisplay display = new UploadDisplay(event.getModel());
-    display.showDialog();    
+  public static class MultipleFileDatasetUploadEvent extends HistoryContentsActionManager.HistoryContentsActionEvent {
   }
 
+  @Subscribe
+  public void handleUploadEvent(final UploadEvent event) {
+    displayUploadDialog(event.getModel(), false);
+  }
+  
+  @Subscribe
+  public void handleMultipleFileDatasetUploadEvent(final MultipleFileDatasetUploadEvent event) {
+    displayUploadDialog(event.getModel(), true);
+  }
+  
+  private void displayUploadDialog(final HistoryContentsSelectionModel model, final boolean multipleFileDataset) {
+    final UploadDisplay display = new UploadDisplay(model);
+    display.displayDatasetName(multipleFileDataset);
+    display.showDialog();        
+  }
+  
 }

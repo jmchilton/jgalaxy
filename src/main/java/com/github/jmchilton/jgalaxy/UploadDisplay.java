@@ -35,6 +35,9 @@ public class UploadDisplay extends DialogDisplay {
     jLabel3 = new javax.swing.JLabel();
     dbKeyTextField = new javax.swing.JTextField();
     jSeparator5 = new javax.swing.JSeparator();
+    namePanel = new javax.swing.JPanel();
+    jLabel1 = new javax.swing.JLabel();
+    datasetName = new javax.swing.JTextField();
 
     uploadFileChooser.setMultiSelectionEnabled(true);
     uploadFileChooser.addActionListener(new java.awt.event.ActionListener() {
@@ -106,6 +109,31 @@ public class UploadDisplay extends DialogDisplay {
 
     jSeparator5.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
+    jLabel1.setText("Dataset Name");
+
+    datasetName.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        datasetNameActionPerformed(evt);
+      }
+    });
+
+    javax.swing.GroupLayout namePanelLayout = new javax.swing.GroupLayout(namePanel);
+    namePanel.setLayout(namePanelLayout);
+    namePanelLayout.setHorizontalGroup(
+      namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(namePanelLayout.createSequentialGroup()
+        .addComponent(jLabel1)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(datasetName, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(0, 0, Short.MAX_VALUE))
+    );
+    namePanelLayout.setVerticalGroup(
+      namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        .addComponent(datasetName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(jLabel1))
+    );
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -113,6 +141,7 @@ public class UploadDisplay extends DialogDisplay {
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(namePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addGroup(layout.createSequentialGroup()
             .addComponent(selectFilesButton)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -138,8 +167,10 @@ public class UploadDisplay extends DialogDisplay {
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(uploadPane, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(uploadPane, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(namePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
           .addComponent(jSeparator3)
           .addComponent(selectFilesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -184,6 +215,13 @@ public class UploadDisplay extends DialogDisplay {
       model.addRow(new Object[] { file.getName(), file.getPath(), -1 });
     }
   }//GEN-LAST:event_uploadFileChooserActionPerformed
+
+  private void datasetNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datasetNameActionPerformed
+  }//GEN-LAST:event_datasetNameActionPerformed
+  
+  public void displayDatasetName(final boolean visible) {
+    namePanel.setVisible(visible);
+  }
   
   private DefaultTableModel getUploadModel() {
     final DefaultTableModel model = (DefaultTableModel) uploadTable.getModel();
@@ -203,13 +241,16 @@ public class UploadDisplay extends DialogDisplay {
   }  
   
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JTextField datasetName;
   private javax.swing.JTextField dbKeyTextField;
   private javax.swing.JTextField fileType;
   private javax.swing.JLabel fileTypeLabel;
+  private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JSeparator jSeparator3;
   private javax.swing.JSeparator jSeparator4;
   private javax.swing.JSeparator jSeparator5;
+  private javax.swing.JPanel namePanel;
   private javax.swing.JButton selectFilesButton;
   private javax.swing.JButton uploadButton;
   private javax.swing.JFileChooser uploadFileChooser;

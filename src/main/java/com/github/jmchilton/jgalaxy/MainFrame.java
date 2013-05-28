@@ -71,6 +71,7 @@ public class MainFrame extends javax.swing.JFrame {
   private void initHistoryContentsActions() {
     addAction(new HistoryContentsActionManager.HistoryContentsActionDescription("Bulk Download", BulkDownloadPresenter.BulkDownloadEvent.class));
     addAction(new HistoryContentsActionManager.HistoryContentsActionDescription("Bulk Upload", UploadPresenter.UploadEvent.class));
+    // addAction(new HistoryContentsActionManager.HistoryContentsActionDescription("Multiple File Dataset Upload", UploadPresenter.MultipleFileDatasetUploadEvent.class));
   }
 
   public void addAction(final HistoryContentsActionManager.HistoryContentsActionDescription actionDescription) {
