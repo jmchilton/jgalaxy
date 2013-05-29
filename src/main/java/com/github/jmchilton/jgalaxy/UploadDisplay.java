@@ -1,8 +1,12 @@
 package com.github.jmchilton.jgalaxy;
 
+import com.github.jmchilton.blend4j.galaxy.ToolsClient.FileUploadRequest;
+import com.github.jmchilton.blend4j.galaxy.ToolsClient.UploadFile;
 import com.github.jmchilton.jgalaxy.mvp.DialogDisplay;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 
@@ -198,8 +202,27 @@ public class UploadDisplay extends DialogDisplay {
   }//GEN-LAST:event_fileTypeActionPerformed
 
   private void uploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadButtonActionPerformed
-    final Map<String, String> uploads = getUploads();
-    new UploadTask(uploads, model.getGalaxyInstance().getToolsClient(), model.getHistory().getId(), fileType.getText(), dbKeyTextField.getText(), new IndexedProgressUpdater() {
+    final List<UploadFile> uploads = getUploads();
+    final String historyId = model.getHistory().getId();
+    final boolean multipleFile = this.namePanel.isVisible();
+    final List<FileUploadRequest> uploadRequests = Lists.newArrayList();
+    if(multipleFile) {
+      final FileUploadRequest request = new FileUploadRequest(historyId, uploads);
+      request.setToolId("multi_upload1");
+      request.setDatasetName(this.datasetName.getText());
+      uploadRequests.add(request);
+    } else {
+      for(UploadFile file : uploads) {
+        final FileUploadRequest request = new FileUploadRequest(historyId, file);
+        uploadRequests.add(request);
+      }
+    }
+    for(final FileUploadRequest request : uploadRequests) {
+      request.setDbKey(dbKeyTextField.getText());
+      request.setFileType(fileType.getText());
+    }
+
+    new UploadTask(uploadRequests, model.getGalaxyInstance().getToolsClient(), new IndexedProgressUpdater() {
 
       public void setProgress(int index, int percentComplete) {
         uploadTable.setValueAt(percentComplete, index, 2);
@@ -228,15 +251,16 @@ public class UploadDisplay extends DialogDisplay {
     return model;
   }  
   
-  private Map<String, String> getUploads() {
-    final Map<String, String> uploads = Maps.newLinkedHashMap();
-      final DefaultTableModel model = getUploadModel();
-      final int rowCount = model.getRowCount();
-      for(int i = 0; i < rowCount; i++) {
-        final String datasetName = (String) model.getValueAt(i, 0);
-        final String filename = (String) model.getValueAt(i, 1);
-        uploads.put(filename, datasetName);
-      }
+  private List<UploadFile> getUploads() {
+    final List<UploadFile> uploads = Lists.newArrayList();
+    final DefaultTableModel tableModel = getUploadModel();
+    final int rowCount = tableModel.getRowCount();
+    for(int i = 0; i < rowCount; i++) {
+      final String fileName = (String) tableModel.getValueAt(i, 0);
+      final String filename = (String) tableModel.getValueAt(i, 1);
+      final UploadFile file = new UploadFile(new File(filename), fileName);
+      uploads.add(file);
+    }
     return uploads;
   }  
   
