@@ -21,6 +21,7 @@ public class JGalaxyModule extends AbstractModule {
     bind(EventBus.class).toInstance(new com.github.jmchilton.jgalaxy.mvp.EventBus());
     bind(BulkDownloadPresenter.class).asEagerSingleton();
     bind(UploadPresenter.class).asEagerSingleton();
+    bind(ConnectionPresenter.class).asEagerSingleton();
     bind(JGalaxy.class);
   }
   

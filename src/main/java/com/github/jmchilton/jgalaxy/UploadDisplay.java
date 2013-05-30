@@ -210,16 +210,17 @@ public class UploadDisplay extends DialogDisplay {
       final FileUploadRequest request = new FileUploadRequest(historyId, uploads);
       request.setToolId("multi_upload1");
       request.setDatasetName(this.datasetName.getText());
+      request.getExtraParameters().put("raw_merge_type", fileType.getText());
       uploadRequests.add(request);
     } else {
       for(UploadFile file : uploads) {
         final FileUploadRequest request = new FileUploadRequest(historyId, file);
+        request.setFileType(fileType.getText());
         uploadRequests.add(request);
       }
     }
     for(final FileUploadRequest request : uploadRequests) {
       request.setDbKey(dbKeyTextField.getText());
-      request.setFileType(fileType.getText());
     }
 
     new UploadTask(uploadRequests, model.getGalaxyInstance().getToolsClient(), new IndexedProgressUpdater() {

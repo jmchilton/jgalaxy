@@ -5,6 +5,7 @@ import com.github.jmchilton.blend4j.galaxy.GalaxyInstanceFactory;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -40,7 +41,13 @@ public class InstanceManager {
   @Inject
   public InstanceManager(EventBus eventBus) {
     this.eventBus = eventBus;
-    initInstances();
+    eventBus.register(this);
+    initInstances();    
+  }
+  
+  @Subscribe
+  public void onEstablishConnectionEvent(final ConnectionPresenter.EstablishConnectionEvent event) {
+    this.connectNewInstance(event.getUrl(), event.getApiKey());
   }
   
   public List<Instance> getInstances() {
