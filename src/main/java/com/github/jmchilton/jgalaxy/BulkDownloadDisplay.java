@@ -40,6 +40,7 @@ public class BulkDownloadDisplay extends DialogDisplay {
     downloadDestinationField = new javax.swing.JTextField();
     jLabel2 = new javax.swing.JLabel();
     jSeparator2 = new javax.swing.JSeparator();
+    provenanceCheckBox = new javax.swing.JCheckBox();
 
     downloadDestinationChooser.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
     downloadDestinationChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
@@ -99,6 +100,8 @@ public class BulkDownloadDisplay extends DialogDisplay {
 
     jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
+    provenanceCheckBox.setText("Include Provenance Information");
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -109,26 +112,31 @@ public class BulkDownloadDisplay extends DialogDisplay {
           .addGroup(layout.createSequentialGroup()
             .addComponent(jLabel2)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(downloadDestinationField, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+            .addComponent(downloadDestinationField, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(bulkDownloadButton))
-          .addComponent(bulkDownloadPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+          .addComponent(bulkDownloadPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(provenanceCheckBox)))
         .addContainerGap())
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(bulkDownloadPane, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+        .addComponent(bulkDownloadPane, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
             .addComponent(bulkDownloadButton)
             .addComponent(downloadDestinationField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(jLabel2)))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(provenanceCheckBox)
         .addContainerGap())
     );
 
@@ -143,7 +151,7 @@ public class BulkDownloadDisplay extends DialogDisplay {
         bulkDownloadTable.setValueAt(percentComplete, index, 2);
       }
 
-    }).execute();
+    }, provenanceCheckBox.isSelected()).execute();
 
     bulkDownloadPane.grabFocus();
   }//GEN-LAST:event_bulkDownloadButtonActionPerformed
@@ -201,5 +209,6 @@ public class BulkDownloadDisplay extends DialogDisplay {
   private javax.swing.JTextField downloadDestinationField;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JSeparator jSeparator2;
+  private javax.swing.JCheckBox provenanceCheckBox;
   // End of variables declaration//GEN-END:variables
 }
