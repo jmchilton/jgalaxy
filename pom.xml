@@ -81,19 +81,11 @@
     </plugins>
   </build>
 
-  <repositories>
-    <repository>
-      <id>msi-artifactory</id>
-      <name>MSI Artifactory</name>
-      <url>http://artifactory.msi.umn.edu/libs-snapshot</url>
-    </repository>
-  </repositories>
-
   <dependencies>
     <dependency>
       <groupId>com.github.jmchilton.blend4j</groupId>
       <artifactId>blend4j</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>0.1-alpha-1</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
